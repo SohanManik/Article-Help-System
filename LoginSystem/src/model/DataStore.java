@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import controller.Article;
 import model.User;
 import model.Invitation;
 
@@ -24,5 +26,9 @@ public class DataStore {
 
     public User findUserByUsername(String username) {
         return userList.stream().filter(u -> u.getUsername().equals(username)).findFirst().orElse(null);
+    }
+    
+    public void addArticle(Article article) {
+//        articleList.add(article);
     }
 }

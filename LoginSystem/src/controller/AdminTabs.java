@@ -8,45 +8,68 @@ import model.User;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 public class AdminTabs {
 
-	public static VBox createAddArticleUserTab() {
-	        VBox vbox = new VBox(10);
-	        vbox.getChildren().addAll(
-	        		new Label("Enter article title: "), usernameField,
-	        		new Label("Enter author(s) (comma-separated): "), expiryDatePicker,
-	        		new Label("Enter article abstract: "), usernameField,
-	        		new Label("Enter keywords (comma-separated): "), expiryDatePicker,
-	        		new Label("Enter article body: "), usernameField,
-	        		new Label("Enter references (comma-separated): "), expiryTimeField, addArticleButton, messageLabel);
-	        return vbox;
-	    }
-	
-//    public static VBox createResetUserTab() {
-//        VBox vbox = new VBox(10);
-//        TextField usernameField = new TextField(), expiryTimeField = new TextField();
-//        DatePicker expiryDatePicker = new DatePicker();
-//        Label messageLabel = new Label();
-//        Button resetButton = new Button("Reset User Account");
-//        resetButton.setOnAction(e -> {
-//            User user = DataStore.getInstance().findUserByUsername(usernameField.getText().trim());
-//            if (user != null) {
-//                String oneTimePassword = UUID.randomUUID().toString().substring(0, 4);
-//                LocalDateTime expiryDateTime = expiryDatePicker.getValue().atTime(
-//                        Integer.parseInt(expiryTimeField.getText().split(":")[0]),
-//                        Integer.parseInt(expiryTimeField.getText().split(":")[1]));
-//                user.setOneTimePassword(oneTimePassword, expiryDateTime);
-//                messageLabel.setText("One-time password set: " + oneTimePassword);
-//            } else messageLabel.setText("User not found.");
-//        });
-//        vbox.getChildren().addAll(new Label("Username:"), usernameField, new Label("Expiry Date:"),
-//                expiryDatePicker, new Label("Expiry Time (HH:MM):"), expiryTimeField, resetButton, messageLabel);
-//        return vbox;
-//    }
+	public static VBox createAddArticleTab() {
+        VBox vbox = new VBox(10);
 
+        TextField titleField = new TextField();
+        TextField authorsField = new TextField();
+        TextArea abstractField = new TextArea();
+        TextField keywordsField = new TextField();
+        TextArea bodyField = new TextArea();
+        TextField referencesField = new TextField();
+        Label messageLabel = new Label();
+        Button addButton = new Button("Add Article");
+
+        addButton.setOnAction(e -> {
+            String title = titleField.getText().trim();
+            String authors = authorsField.getText().trim();
+            String abstractText = abstractField.getText().trim();
+            String keywords = keywordsField.getText().trim();
+            String body = bodyField.getText().trim();
+            String references = referencesField.getText().trim();
+
+            if (!title.isEmpty() && !body.isEmpty()) {
+                Article article = new Article(
+                        title,
+                        Arrays.asList(authors.split(",")),
+                        abstractText,
+                        Arrays.asList(keywords.split(",")),
+                        body,
+                        Arrays.asList(references.split(","))
+                );
+                DataStore.getInstance().addArticle(article);
+                messageLabel.setText("Article added successfully!");
+
+                // Clear the fields
+                titleField.clear();
+                authorsField.clear();
+                abstractField.clear();
+                keywordsField.clear();
+                bodyField.clear();
+                referencesField.clear();
+            } else {
+                messageLabel.setText("Title and body are required.");
+            }
+        });
+
+        vbox.getChildren().addAll(
+                new Label("Article Title:"), titleField,
+                new Label("Authors (comma-separated):"), authorsField,
+                new Label("Article Abstract:"), abstractField,
+                new Label("Keywords (comma-separated):"), keywordsField,
+                new Label("Article Body:"), bodyField,
+                new Label("References (comma-separated):"), referencesField,
+                addButton, messageLabel
+        );
+
+        return vbox;
+    }
 	
 	public static VBox createInviteUserTab() {
         VBox vbox = new VBox(10);

@@ -24,7 +24,7 @@ public class HomeController {
         if ("Administrator".equals(role)) {
             TabPane adminTabs = new TabPane();
             adminTabs.getTabs().addAll(
-            		new Tab("Add Article", AdminTabs.createAddArticleUserTab()),
+            		new Tab("Add Article", AdminTabs.createAddArticleTab()),
 //            		new Tab("List Article", AdminTabs.createLtArticleUserTab()),
 //            		new Tab("View Article", AdminTabs.createVwArticleUserTab()),
 //            		new Tab("Delete Article", AdminTabs.createDelArticleUserTab()),

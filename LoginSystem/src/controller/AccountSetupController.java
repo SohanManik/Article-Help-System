@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
@@ -18,6 +19,8 @@ public class AccountSetupController {
 
     public void showAccountSetupPage() {
         GridPane grid = new GridPane();
+        grid.setVgap(8); grid.setHgap(10);
+        grid.setPadding(new Insets(10, 0, 0, 10));
         TextField emailField = new TextField(), firstNameField = new TextField(),
                 middleNameField = new TextField(), lastNameField = new TextField(),
                 preferredFirstNameField = new TextField();

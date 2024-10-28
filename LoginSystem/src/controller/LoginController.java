@@ -4,6 +4,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import javafx.geometry.Insets;
 import model.DataStore;
 import model.Invitation;
 import model.User;
@@ -22,6 +23,7 @@ public class LoginController {
     public void showLoginPage() {
         GridPane grid = new GridPane();
         grid.setVgap(8); grid.setHgap(10);
+        grid.setPadding(new Insets(10, 0, 0, 10));
         grid.addRow(0, new Label("Username:"), usernameField);
         grid.addRow(1, new Label("Password:"), passwordField);
         grid.addRow(2, new Label("Confirm Password:"), confirmPasswordField);

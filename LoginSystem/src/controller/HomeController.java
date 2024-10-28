@@ -20,16 +20,16 @@ public class HomeController {
 
     public void showHomePage() {
         VBox vbox = new VBox(10);
-        vbox.getChildren().add(new Label("Welcome, " + role + " " + user.getPreferredFirstNameOrDefault() + "!"));
+        vbox.getChildren().add(new Label("  Welcome, " + role + " " + user.getPreferredFirstNameOrDefault() + "!"));
         if ("Administrator".equals(role)) {
             TabPane adminTabs = new TabPane();
             adminTabs.getTabs().addAll(
             		new Tab("Add Article", AdminTabs.createAddArticleTab()),
-//            		new Tab("List Article", AdminTabs.createLtArticleUserTab()),
-//            		new Tab("View Article", AdminTabs.createVwArticleUserTab()),
-//            		new Tab("Delete Article", AdminTabs.createDelArticleUserTab()),
-//            		new Tab("Backup Article", AdminTabs.createBackArticleUserTab()),
-//            		new Tab("Restore Article", AdminTabs.createRestArticleUserTab()),
+            		new Tab("List Article", AdminTabs.createListArticlesTab()),
+            		new Tab("View Article", AdminTabs.createViewArticleTab()),
+            		new Tab("Delete Article", AdminTabs.createDeleteArticleTab()),
+            		new Tab("Backup Article", AdminTabs.createBackupArticlesTab()),
+            		new Tab("Restore Article", AdminTabs.createRestoreArticlesTab()),
                     new Tab("Invite User", AdminTabs.createInviteUserTab()),
                     new Tab("Reset Account", AdminTabs.createResetUserTab()),
                     new Tab("Delete User", AdminTabs.createDeleteUserTab()),
@@ -44,6 +44,6 @@ public class HomeController {
             loginController.showLoginPage();
         });
         vbox.getChildren().add(logoutButton);
-        primaryStage.setScene(new Scene(vbox, 500, 400));
+        primaryStage.setScene(new Scene(vbox, 960, 720));
     }
 }

@@ -8,17 +8,22 @@ import model.User;
 
 public class RoleSelectionController {
 
+    // References to the primary stage and the user whose role is being selected
     private Stage primaryStage;
     private User user;
 
+    // Constructor initializing the stage and user
     public RoleSelectionController(Stage primaryStage, User user) {
         this.primaryStage = primaryStage;
         this.user = user;
     }
 
+    // Method to display the role selection page, allowing the user to choose a role to proceed with
     public void showRoleSelectionPage() {
         VBox vbox = new VBox(10);
         ToggleGroup roleGroup = new ToggleGroup();
+        
+        // Create a radio button for each role assigned to the user
         user.getRoles().forEach(role -> {
             RadioButton roleButton = new RadioButton(role);
             roleButton.setToggleGroup(roleGroup);

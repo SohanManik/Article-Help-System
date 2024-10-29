@@ -11,35 +11,42 @@ import model.User;
 
 public class LoginController {
 
+    // Primary stage reference and input fields for login/registration
     private Stage primaryStage;
     private TextField usernameField = new TextField(), invitationCodeField = new TextField();
     private PasswordField passwordField = new PasswordField(), confirmPasswordField = new PasswordField();
     private Label messageLabel = new Label();
 
+    // Constructor initializing the stage
     public LoginController(Stage primaryStage) {
         this.primaryStage = primaryStage;
     }
 
+    // Method to display the login page layout
     public void showLoginPage() {
         GridPane grid = new GridPane();
-        grid.setVgap(8); grid.setHgap(10);
-        grid.setPadding(new Insets(10, 0, 0, 10));
+        grid.setVgap(8); grid.setHgap(10);			// Set vertical and horizontal spacing
+        grid.setPadding(new Insets(10, 0, 0, 10));	// Padding for layout
         
-        messageLabel.setPrefWidth(180); messageLabel.setMaxWidth(180);
-        messageLabel.setWrapText(true);
+        messageLabel.setPrefWidth(180); messageLabel.setMaxWidth(180);	// Set width for the message label
+        messageLabel.setWrapText(true);									// Enable text wrapping for the message label
         
+        // Add labels and input fields to the grid layout
         grid.addRow(0, new Label("Username:"), usernameField);
         grid.addRow(1, new Label("Password:"), passwordField);
         grid.addRow(2, new Label("Confirm Password:"), confirmPasswordField);
         grid.addRow(3, new Label("Invitation Code:"), invitationCodeField);
         
+        // Button for logging in or registering, with action handler
         Button loginButton = new Button("Login / Register");
         loginButton.setOnAction(e -> handleLoginOrRegister());
-        grid.addRow(4, loginButton, messageLabel);
-        primaryStage.setScene(new Scene(grid, 400, 400));
+        grid.addRow(4, loginButton, messageLabel);			// Add button and message label to grid
+
+        primaryStage.setScene(new Scene(grid, 400, 400));	// Set the scene and show it on the stage
         primaryStage.show();
     }
 
+    // Method to handle login or registration based on the provided details
     private void handleLoginOrRegister() {
         String username = usernameField.getText().trim();
         String password = passwordField.getText();
@@ -76,6 +83,7 @@ public class LoginController {
         clearFields();
     }
 
+    // Method to handle registration via an invitation code
     private void handleInvitationCode(String code) {
         DataStore dataStore = DataStore.getInstance();
         Invitation invitation = dataStore.getInvitations().get(code);
@@ -87,6 +95,7 @@ public class LoginController {
         }
     }
 
+    // Method to handle password reset using a one-time password
     private void handlePasswordReset(User user, String oneTimePassword) {
         if (oneTimePassword.equals(user.getOneTimePassword()) && java.time.LocalDateTime.now().isBefore(user.getPasswordExpiry())) {
             PasswordResetController passwordResetController = new PasswordResetController(primaryStage, user);
@@ -96,6 +105,7 @@ public class LoginController {
         }
     }
 
+    // Validates the entered password and confirmation password
     private boolean validatePassword(String password, String confirmPassword) {
         if (password.isEmpty() || confirmPassword.isEmpty()) {
             messageLabel.setText("Password fields cannot be empty.");
@@ -108,6 +118,7 @@ public class LoginController {
         return true;
     }
 
+    // Registers the first user as an Administrator if no users exist
     private void registerAdmin(String username, String password) {
         DataStore dataStore = DataStore.getInstance();
         User admin = new User(username, password);
@@ -115,7 +126,8 @@ public class LoginController {
         dataStore.getUserList().add(admin);
         messageLabel.setText("Admin account created. Please log in again.");
     }
-
+    
+    // Clears all input fields for username, password, confirm password, and invitation code
     private void clearFields() {
         usernameField.clear();
         passwordField.clear();
@@ -123,6 +135,7 @@ public class LoginController {
         invitationCodeField.clear();
     }
 
+    // Proceeds to the home page after successful login, allowing role selection if multiple roles exist
     void proceedAfterLogin(User user) {
         if (user.getRoles().size() > 1) {
             RoleSelectionController roleSelectionController = new RoleSelectionController(primaryStage, user);
@@ -132,13 +145,14 @@ public class LoginController {
             homeController.showHomePage();
         }
     }
-
+    
+    // Displays role selection for a new user registration
     private void showRoleSelectionForRegistration(String username, String password) {
         RegistrationController registrationController = new RegistrationController(primaryStage, username, password);
         registrationController.showRoleSelectionForRegistration();
     }
 
-    // Inner class for Account Setup
+    // Inner class to manage account setup for newly registered users
     private class AccountSetupController {
 
         private User user;
@@ -152,12 +166,14 @@ public class LoginController {
             grid.setVgap(8); grid.setHgap(10);
             grid.setPadding(new Insets(10, 0, 0, 10));
 
+            // Define input fields for account details
             TextField emailField = new TextField(), firstNameField = new TextField(),
                     middleNameField = new TextField(), lastNameField = new TextField(),
                     preferredFirstNameField = new TextField();
             Label setupMessageLabel = new Label();
             Button finishSetupButton = new Button("Finish Setup");
 
+            // Button action to save account setup details
             finishSetupButton.setOnAction(e -> {
                 if (emailField.getText().trim().isEmpty() || firstNameField.getText().trim().isEmpty()
                         || lastNameField.getText().trim().isEmpty()) {
@@ -165,11 +181,12 @@ public class LoginController {
                 } else {
                     user.setDetails(emailField.getText(), firstNameField.getText(), middleNameField.getText(),
                             lastNameField.getText(), preferredFirstNameField.getText());
-                    user.setAccountSetupComplete(true);
-                    proceedAfterLogin(user);
+                    user.setAccountSetupComplete(true); // Mark account setup as complete
+                    proceedAfterLogin(user);			// Proceed to home page after setup
                 }
             });
 
+            // Adding labels and input fields for account details to the grid layout
             grid.addRow(0, new Label("Email:"), emailField);
             grid.addRow(1, new Label("First Name:"), firstNameField);
             grid.addRow(2, new Label("Middle Name:"), middleNameField);
@@ -177,7 +194,7 @@ public class LoginController {
             grid.addRow(4, new Label("Preferred First Name:"), preferredFirstNameField);
             grid.addRow(5, finishSetupButton, setupMessageLabel);
 
-            primaryStage.setScene(new Scene(grid, 400, 400));
+            primaryStage.setScene(new Scene(grid, 400, 400)); // Set the account setup scene on the primary stage
         }
     }
 }

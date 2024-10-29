@@ -15,9 +15,10 @@ import java.util.List;
 import java.util.UUID;
 
 public class AdminTabs {
-
+    // Static reference to DatabaseHelper instance for database operations
 	private static DatabaseHelper databaseHelper;
-
+	
+    // Static initializer block to initialize the DatabaseHelper instance with error handling
     static {
         try {
             databaseHelper = DatabaseHelper.getInstance();
@@ -25,20 +26,24 @@ public class AdminTabs {
             e.printStackTrace();
         }
     }
-	
+    
+    // Helper method to create a VBox layout with padding
     private static VBox createVBoxWithPadding() {
-        VBox vbox = new VBox(10);
-        vbox.setPadding(new Insets(10));
+    	VBox vbox = new VBox(10); 			// 10px spacing between elements
+        vbox.setPadding(new Insets(10)); 	// 10px padding on all sides
         return vbox;
     }
 
+    // Helper method to add a label and input field to a VBox
     private static void setupLabelAndField(VBox vbox, String labelText, Control field) {
         vbox.getChildren().addAll(new Label(labelText), field);
     }
 
+    // Creates the UI layout for the "Add Article" tab with necessary input fields and a submit button
     public static VBox createAddArticleTab() {
         VBox vbox = createVBoxWithPadding();
         
+        // Define text fields for article attributes
         TextField titleField = new TextField(), authorsField = new TextField(), keywordsField = new TextField();
         TextArea abstractField = new TextArea(), bodyField = new TextArea(), referencesField = new TextArea();
         Label messageLabel = new Label();
@@ -61,21 +66,24 @@ public class AdminTabs {
                 messageLabel.setText("Error adding article: " + ex.getMessage());
             }
         });
-
+        
+        // Setting up labels and input fields for various article details
         setupLabelAndField(vbox, "Title:", titleField);
         setupLabelAndField(vbox, "Authors (comma-separated):", authorsField);
         setupLabelAndField(vbox, "Abstract:", abstractField);
         setupLabelAndField(vbox, "Keywords (comma-separated):", keywordsField);
         setupLabelAndField(vbox, "Body:", bodyField);
         setupLabelAndField(vbox, "References (comma-separated):", referencesField);
+        
         vbox.getChildren().addAll(addArticleButton, messageLabel);
 
         return vbox;
     }
 
+    // Creates the UI layout for the "List Articles" tab
     public static VBox createListArticlesTab() {
         VBox vbox = createVBoxWithPadding();
-        ListView<String> articlesListView = new ListView<>();
+        ListView<String> articlesListView = new ListView<>(); // ListView to display article titles
         Label messageLabel = new Label();
         
         Button listArticlesButton = new Button("Refresh List");
@@ -90,7 +98,8 @@ public class AdminTabs {
         vbox.getChildren().addAll(listArticlesButton, articlesListView, messageLabel);
         return vbox;
     }
-
+    
+    // Creates the UI layout for viewing an article by ID
     public static VBox createViewArticleTab() {
         VBox vbox = createVBoxWithPadding();
         TextField articleIdField = new TextField();
@@ -113,6 +122,7 @@ public class AdminTabs {
         return vbox;
     }
 
+    // Creates the UI layout for deleting an article by ID
     public static VBox createDeleteArticleTab() {
         VBox vbox = createVBoxWithPadding();
         TextField articleIdField = new TextField();
@@ -133,9 +143,10 @@ public class AdminTabs {
         return vbox;
     }
 
+    // Creates the UI layout for the "Backup Articles" tab
     public static VBox createBackupArticlesTab() {
         VBox vbox = createVBoxWithPadding();
-        TextField backupFileField = new TextField();
+        TextField backupFileField = new TextField();	
         Label messageLabel = new Label();
         
         Button backupButton = new Button("Backup Articles");
@@ -153,6 +164,7 @@ public class AdminTabs {
         return vbox;
     }
 
+    // Creates the UI layout for the "Restore Articles" tab
     public static VBox createRestoreArticlesTab() {
         VBox vbox = createVBoxWithPadding();
         TextField restoreFileField = new TextField();
@@ -183,10 +195,12 @@ public class AdminTabs {
         messageLabel.setText(message);
     }
 
+    // Creates the UI layout for the "Invite User" tab, allowing role selection for invitation
     public static VBox createInviteUserTab() {
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10));
         
+        // Checkbox options for selecting user roles in the invitation
         CheckBox studentCheckBox = new CheckBox("Student"), instructorCheckBox = new CheckBox("Instructor");
         Label codeLabel = new Label(), messageLabel = new Label();
         Button generateCodeButton = new Button("Generate Invitation Code");
@@ -204,6 +218,7 @@ public class AdminTabs {
         return vbox;
     }
 
+    // Creates the UI layout for "Reset User Account" tab with fields to set a one-time password and expiry
     public static VBox createResetUserTab() {
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10));
@@ -215,6 +230,7 @@ public class AdminTabs {
         resetButton.setOnAction(e -> {
             User user = DataStore.getInstance().findUserByUsername(usernameField.getText().trim());
             if (user != null) {
+                // Generate a one-time password and set expiry date and time
                 String oneTimePassword = UUID.randomUUID().toString().substring(0, 4);
                 LocalDateTime expiryDateTime = expiryDatePicker.getValue().atTime(
                         Integer.parseInt(expiryTimeField.getText().split(":")[0]),
@@ -226,7 +242,9 @@ public class AdminTabs {
         addLabelAndFields(vbox, new Label("  Username:"), usernameField, new Label("  Expiry Date:"), expiryDatePicker, new Label("  Expiry Time (HH:MM):"), expiryTimeField, resetButton, messageLabel);
         return vbox;
     }
-
+    
+    
+    // Creates the UI layout for "Delete User Account" tab, allowing user deletion with confirmation
     public static VBox createDeleteUserTab() {
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10));
@@ -250,6 +268,7 @@ public class AdminTabs {
         return vbox;
     }
 
+    // Creates the UI layout for "List Users" tab, displaying a refreshable list of users
     public static VBox createListUsersTab() {
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10));
@@ -265,6 +284,7 @@ public class AdminTabs {
         return vbox;
     }
 
+    // Creates the UI layout for "Manage Roles" tab to assign roles to a specified user
     public static VBox createManageRolesTab() {
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10));

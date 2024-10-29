@@ -8,14 +8,17 @@ import model.User;
 
 public class PasswordResetController {
 
+    // Primary stage and user reference to facilitate password reset
     private Stage primaryStage;
     private User user;
 
+    // Constructor to initialize the primary stage and user object
     public PasswordResetController(Stage primaryStage, User user) {
         this.primaryStage = primaryStage;
         this.user = user;
     }
 
+    // Method to display the password reset page layout
     public void showPasswordResetPage() {
         VBox vbox = new VBox(10);
         PasswordField newPasswordField = new PasswordField(), confirmNewPasswordField = new PasswordField();

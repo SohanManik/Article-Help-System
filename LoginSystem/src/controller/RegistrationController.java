@@ -14,24 +14,28 @@ import java.util.List;
 
 public class RegistrationController {
 
+    // References to the primary stage, user roles, invitation code, username, and password
     private Stage primaryStage;
     private List<String> roles;
     private String invitationCode;
     private String username;
     private String password;
 
+    // Constructor for registration with roles and invitation code
     public RegistrationController(Stage primaryStage, List<String> roles, String invitationCode) {
         this.primaryStage = primaryStage;
         this.roles = roles;
         this.invitationCode = invitationCode;
     }
 
+    // Constructor for registration without predefined roles (e.g., direct registration)
     public RegistrationController(Stage primaryStage, String username, String password) {
         this.primaryStage = primaryStage;
         this.username = username;
         this.password = password;
     }
 
+    // Displays the registration page with predefined roles (using an invitation code)
     public void showRegistrationPageWithRoles() {
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10, 0, 0, 10));
@@ -59,6 +63,7 @@ public class RegistrationController {
             }
         });
 
+        // Add UI components to the VBox layout
         vbox.getChildren().addAll(
                 new Label("Username:"), usernameField,
                 new Label("Password:"), passwordField,
@@ -69,7 +74,7 @@ public class RegistrationController {
         primaryStage.setScene(new Scene(vbox, 300, 200));
     }
 
-
+    // Displays the role selection page for registration when roles are not predefined
     public void showRoleSelectionForRegistration() {
         VBox vbox = new VBox(10);
         CheckBox studentCheckBox = new CheckBox("Student"), instructorCheckBox = new CheckBox("Instructor");
@@ -90,6 +95,7 @@ public class RegistrationController {
         primaryStage.setScene(new Scene(vbox, 300, 200));
     }
 
+    // Method to validate that password and confirm password match and are not empty
     private boolean validatePassword(String password, String confirmPassword, Label messageLabel) {
         if (password.isEmpty() || confirmPassword.isEmpty()) {
             messageLabel.setText("Password fields cannot be empty.");

@@ -8,19 +8,24 @@ import model.User;
 
 public class HomeController {
 
+    // Reference to the primary stage, the current user, and the user's role
     private Stage primaryStage;
     private User user;
     private String role;
 
+    // Constructor initializing the primary stage, user, and role
     public HomeController(Stage primaryStage, User user, String role) {
         this.primaryStage = primaryStage;
         this.user = user;
         this.role = role;
     }
 
+    // Method to display the home page with content based on the user's role
     public void showHomePage() {
         VBox vbox = new VBox(10);
         vbox.getChildren().add(new Label("  Welcome, " + role + " " + user.getPreferredFirstNameOrDefault() + "!"));
+        
+        // If the user is an Administrator, display all admin tabs
         if ("Administrator".equals(role)) {
             TabPane adminTabs = new TabPane();
             adminTabs.getTabs().addAll(
@@ -39,6 +44,7 @@ public class HomeController {
             vbox.getChildren().add(adminTabs);
         }
         
+        // If the user is an Instructor, display a limited set of tabs
         else if ("Instructor".equals(role)) {
             TabPane adminTabs = new TabPane();
             adminTabs.getTabs().addAll(
@@ -52,12 +58,14 @@ public class HomeController {
             vbox.getChildren().add(adminTabs);
         }
         
+        // Logout button for navigating back to the login page
         Button logoutButton = new Button("Logout");
         logoutButton.setOnAction(e -> {
+            // Redirect to the login page by initializing a new LoginController
             LoginController loginController = new LoginController(primaryStage);
             loginController.showLoginPage();
         });
-        vbox.getChildren().add(logoutButton);
-        primaryStage.setScene(new Scene(vbox, 520, 560));
+        vbox.getChildren().add(logoutButton);				// Adding the logout button to the layout
+        primaryStage.setScene(new Scene(vbox, 520, 560));	// Setting the scene with specified dimensions
     }
 }

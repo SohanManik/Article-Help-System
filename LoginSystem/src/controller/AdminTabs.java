@@ -26,72 +26,62 @@ public class AdminTabs {
         }
     }
 	
-	public static VBox createAddArticleTab() {
+    private static VBox createVBoxWithPadding() {
         VBox vbox = new VBox(10);
         vbox.setPadding(new Insets(10));
+        return vbox;
+    }
 
-        TextField titleField = new TextField();
-        TextField authorsField = new TextField();
-        TextArea abstractField = new TextArea();
-        TextField keywordsField = new TextField();
-        TextArea bodyField = new TextArea();
-        TextArea referencesField = new TextArea();
+    private static void setupLabelAndField(VBox vbox, String labelText, Control field) {
+        vbox.getChildren().addAll(new Label(labelText), field);
+    }
+
+    public static VBox createAddArticleTab() {
+        VBox vbox = createVBoxWithPadding();
+        
+        TextField titleField = new TextField(), authorsField = new TextField(), keywordsField = new TextField();
+        TextArea abstractField = new TextArea(), bodyField = new TextArea(), referencesField = new TextArea();
         Label messageLabel = new Label();
-        Button addArticleButton = new Button("Add Article");
 
+        Button addArticleButton = new Button("Add Article");
         addArticleButton.setOnAction(e -> {
             try {
-                String title = titleField.getText().trim();
-                String authors = authorsField.getText().trim();
-                String abstractText = abstractField.getText().trim();
-                String keywords = keywordsField.getText().trim();
-                String body = bodyField.getText().trim();
-                String references = referencesField.getText().trim();
-
-                databaseHelper.addArticle(title, authors, abstractText, keywords, body, references);
+                databaseHelper.addArticle(
+                    titleField.getText().trim(), authorsField.getText().trim(),
+                    abstractField.getText().trim(), keywordsField.getText().trim(),
+                    bodyField.getText().trim(), referencesField.getText().trim()
+                );
                 messageLabel.setText("Article added successfully!");
 
                 // Clear fields after submission
-                titleField.clear();
-                authorsField.clear();
-                abstractField.clear();
-                keywordsField.clear();
-                bodyField.clear();
-                referencesField.clear();
+                List.of(titleField, authorsField, abstractField, keywordsField, bodyField, referencesField)
+                        .forEach(field -> ((TextInputControl) field).clear());
 
             } catch (Exception ex) {
                 messageLabel.setText("Error adding article: " + ex.getMessage());
             }
         });
 
-        // Add all components to the VBox
-        vbox.getChildren().addAll(
-                new Label("Title:"), titleField,
-                new Label("Authors (comma-separated):"), authorsField,
-                new Label("Abstract:"), abstractField,
-                new Label("Keywords (comma-separated):"), keywordsField,
-                new Label("Body:"), bodyField,
-                new Label("References (comma-separated):"), referencesField,
-                addArticleButton,
-                messageLabel
-        );
+        setupLabelAndField(vbox, "Title:", titleField);
+        setupLabelAndField(vbox, "Authors (comma-separated):", authorsField);
+        setupLabelAndField(vbox, "Abstract:", abstractField);
+        setupLabelAndField(vbox, "Keywords (comma-separated):", keywordsField);
+        setupLabelAndField(vbox, "Body:", bodyField);
+        setupLabelAndField(vbox, "References (comma-separated):", referencesField);
+        vbox.getChildren().addAll(addArticleButton, messageLabel);
 
         return vbox;
     }
-	
-	public static VBox createListArticlesTab() {
-        VBox vbox = new VBox(10);
-        vbox.setPadding(new Insets(10));
-        
-        ListView<String> articlesListView = new ListView<>();
-        Button listArticlesButton = new Button("Refresh List");
-        Label messageLabel = new Label();
 
+    public static VBox createListArticlesTab() {
+        VBox vbox = createVBoxWithPadding();
+        ListView<String> articlesListView = new ListView<>();
+        Label messageLabel = new Label();
+        
+        Button listArticlesButton = new Button("Refresh List");
         listArticlesButton.setOnAction(e -> {
             try {
-                articlesListView.getItems().clear();
-                List<String> articles = databaseHelper.listArticles(); // Assuming this returns a list of articles
-                articlesListView.getItems().addAll(articles);
+                articlesListView.getItems().setAll(databaseHelper.listArticles());
             } catch (Exception ex) {
                 messageLabel.setText("Error listing articles: " + ex.getMessage());
             }
@@ -102,94 +92,87 @@ public class AdminTabs {
     }
 
     public static VBox createViewArticleTab() {
-        VBox vbox = new VBox(10);
-        vbox.setPadding(new Insets(10));
-        
+        VBox vbox = createVBoxWithPadding();
         TextField articleIdField = new TextField();
         TextArea articleDetailsArea = new TextArea();
         articleDetailsArea.setEditable(false);
-        Button viewArticleButton = new Button("View Article");
         Label messageLabel = new Label();
-
+        
+        Button viewArticleButton = new Button("View Article");
         viewArticleButton.setOnAction(e -> {
             try {
                 int articleId = Integer.parseInt(articleIdField.getText().trim());
-                String articleDetails = databaseHelper.viewArticle(articleId); // Assuming this returns article details as a string
-                articleDetailsArea.setText(articleDetails);
+                articleDetailsArea.setText(databaseHelper.viewArticle(articleId));
             } catch (Exception ex) {
                 messageLabel.setText("Error viewing article: " + ex.getMessage());
             }
         });
 
-        vbox.getChildren().addAll(new Label("Article ID:"), articleIdField, viewArticleButton, articleDetailsArea, messageLabel);
+        setupLabelAndField(vbox, "Article ID:", articleIdField);
+        vbox.getChildren().addAll(viewArticleButton, articleDetailsArea, messageLabel);
         return vbox;
     }
 
     public static VBox createDeleteArticleTab() {
-        VBox vbox = new VBox(10);
-        vbox.setPadding(new Insets(10));
-        
+        VBox vbox = createVBoxWithPadding();
         TextField articleIdField = new TextField();
-        Button deleteArticleButton = new Button("Delete Article");
         Label messageLabel = new Label();
-
+        
+        Button deleteArticleButton = new Button("Delete Article");
         deleteArticleButton.setOnAction(e -> {
             try {
-                int articleId = Integer.parseInt(articleIdField.getText().trim());
-                databaseHelper.deleteArticle(articleId);
+                databaseHelper.deleteArticle(Integer.parseInt(articleIdField.getText().trim()));
                 messageLabel.setText("Article deleted successfully!");
             } catch (Exception ex) {
                 messageLabel.setText("Error deleting article: " + ex.getMessage());
             }
         });
 
-        vbox.getChildren().addAll(new Label("Article ID:"), articleIdField, deleteArticleButton, messageLabel);
+        setupLabelAndField(vbox, "Article ID:", articleIdField);
+        vbox.getChildren().addAll(deleteArticleButton, messageLabel);
         return vbox;
     }
 
     public static VBox createBackupArticlesTab() {
-        VBox vbox = new VBox(10);
-        vbox.setPadding(new Insets(10));
-        
+        VBox vbox = createVBoxWithPadding();
         TextField backupFileField = new TextField();
-        Button backupButton = new Button("Backup Articles");
         Label messageLabel = new Label();
-
+        
+        Button backupButton = new Button("Backup Articles");
         backupButton.setOnAction(e -> {
             try {
-                String backupFileName = backupFileField.getText().trim();
-                databaseHelper.backupArticles(backupFileName);
+                databaseHelper.backupArticles(backupFileField.getText().trim());
                 messageLabel.setText("Backup completed successfully!");
             } catch (Exception ex) {
                 messageLabel.setText("Error backing up articles: " + ex.getMessage());
             }
         });
 
-        vbox.getChildren().addAll(new Label("Backup File Name (e.g., backup.txt):"), backupFileField, backupButton, messageLabel);
+        setupLabelAndField(vbox, "Backup File Name (e.g., backup.txt):", backupFileField);
+        vbox.getChildren().addAll(backupButton, messageLabel);
         return vbox;
     }
 
     public static VBox createRestoreArticlesTab() {
-        VBox vbox = new VBox(10);
-        vbox.setPadding(new Insets(10));
-        
+        VBox vbox = createVBoxWithPadding();
         TextField restoreFileField = new TextField();
-        Button restoreButton = new Button("Restore Articles");
         Label messageLabel = new Label();
-
+        
+        Button restoreButton = new Button("Restore Articles");
         restoreButton.setOnAction(e -> {
             try {
-                String restoreFileName = restoreFileField.getText().trim();
-                databaseHelper.restoreArticles(restoreFileName);
+                databaseHelper.restoreArticles(restoreFileField.getText().trim());
                 messageLabel.setText("Restore completed successfully!");
             } catch (Exception ex) {
                 messageLabel.setText("Error restoring articles: " + ex.getMessage());
             }
         });
 
-        vbox.getChildren().addAll(new Label("Restore File Name (e.g., backup.txt):"), restoreFileField, restoreButton, messageLabel);
+        setupLabelAndField(vbox, "Restore File Name (e.g., backup.txt):", restoreFileField);
+        vbox.getChildren().addAll(restoreButton, messageLabel);
         return vbox;
     }
+
 	
 	private static void addLabelAndFields(VBox vbox, Label label, Control... fields) {
         vbox.getChildren().add(label);

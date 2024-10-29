@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User {
-    private String username, password, email, firstName, middleName, lastName, preferredFirstName, oneTimePassword;
+    @SuppressWarnings("unused")
+	private String username, password, email, firstName, middleName, lastName, preferredFirstName, oneTimePassword;
     private List<String> roles = new ArrayList<>();
     private boolean accountSetupComplete = false;
     private LocalDateTime passwordExpiry;

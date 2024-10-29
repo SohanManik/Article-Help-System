@@ -1,7 +1,9 @@
 package controller;
 
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import model.DataStore;
@@ -32,9 +34,20 @@ public class RegistrationController {
 
     public void showRegistrationPageWithRoles() {
         VBox vbox = new VBox(10);
-        TextField usernameField = new TextField();
-        PasswordField passwordField = new PasswordField(), confirmPasswordField = new PasswordField();
+        vbox.setPadding(new Insets(10, 0, 0, 10));
+        
+        GridPane grid = new GridPane();
+        grid.setVgap(8); grid.setHgap(10);
+        grid.setPadding(new Insets(10, 0, 0, 10));
+
+        TextField usernameField = new TextField(); usernameField.setPrefWidth(200);
+        PasswordField passwordField = new PasswordField(); passwordField.setPrefWidth(200); 
+        PasswordField confirmPasswordField = new PasswordField(); confirmPasswordField.setPrefWidth(200); 
+
         Label messageLabel = new Label();
+        messageLabel.setPrefWidth(200); messageLabel.setMaxWidth(200);
+        messageLabel.setWrapText(true);
+
         Button registerButton = new Button("Register");
         registerButton.setOnAction(e -> {
             if (validatePassword(passwordField.getText(), confirmPasswordField.getText(), messageLabel)) {
@@ -45,10 +58,17 @@ public class RegistrationController {
                 loginController.showLoginPage();
             }
         });
-        vbox.getChildren().addAll(new Label("Username:"), usernameField, new Label("Password:"), passwordField,
-                new Label("Confirm Password:"), confirmPasswordField, registerButton, messageLabel);
-        primaryStage.setScene(new Scene(vbox, 300, 250));
+
+        vbox.getChildren().addAll(
+                new Label("Username:"), usernameField,
+                new Label("Password:"), passwordField,
+                new Label("Confirm Password:"), confirmPasswordField,
+                registerButton, messageLabel
+        );
+
+        primaryStage.setScene(new Scene(vbox, 300, 200));
     }
+
 
     public void showRoleSelectionForRegistration() {
         VBox vbox = new VBox(10);

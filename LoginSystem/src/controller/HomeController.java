@@ -38,12 +38,26 @@ public class HomeController {
             );
             vbox.getChildren().add(adminTabs);
         }
+        
+        else if ("Instructor".equals(role)) {
+            TabPane adminTabs = new TabPane();
+            adminTabs.getTabs().addAll(
+            		new Tab("Add Article", AdminTabs.createAddArticleTab()),
+            		new Tab("List Article", AdminTabs.createListArticlesTab()),
+            		new Tab("View Article", AdminTabs.createViewArticleTab()),
+            		new Tab("Delete Article", AdminTabs.createDeleteArticleTab()),
+            		new Tab("Backup Article", AdminTabs.createBackupArticlesTab()),
+            		new Tab("Restore Article", AdminTabs.createRestoreArticlesTab())
+            );
+            vbox.getChildren().add(adminTabs);
+        }
+        
         Button logoutButton = new Button("Logout");
         logoutButton.setOnAction(e -> {
             LoginController loginController = new LoginController(primaryStage);
             loginController.showLoginPage();
         });
         vbox.getChildren().add(logoutButton);
-        primaryStage.setScene(new Scene(vbox, 960, 720));
+        primaryStage.setScene(new Scene(vbox, 520, 560));
     }
 }

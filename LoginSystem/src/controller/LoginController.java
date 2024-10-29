@@ -24,10 +24,15 @@ public class LoginController {
         GridPane grid = new GridPane();
         grid.setVgap(8); grid.setHgap(10);
         grid.setPadding(new Insets(10, 0, 0, 10));
+        
+        messageLabel.setPrefWidth(180); messageLabel.setMaxWidth(180);
+        messageLabel.setWrapText(true);
+        
         grid.addRow(0, new Label("Username:"), usernameField);
         grid.addRow(1, new Label("Password:"), passwordField);
         grid.addRow(2, new Label("Confirm Password:"), confirmPasswordField);
         grid.addRow(3, new Label("Invitation Code:"), invitationCodeField);
+        
         Button loginButton = new Button("Login / Register");
         loginButton.setOnAction(e -> handleLoginOrRegister());
         grid.addRow(4, loginButton, messageLabel);
@@ -54,7 +59,7 @@ public class LoginController {
                     handlePasswordReset(user, password);
                 } else if (user.getPassword().equals(password)) {
                     if (!user.isAccountSetupComplete()) {
-                        AccountSetupController accountSetupController = new AccountSetupController(primaryStage, user);
+                        AccountSetupController accountSetupController = new AccountSetupController(user);
                         accountSetupController.showAccountSetupPage();
                     } else {
                         proceedAfterLogin(user);
@@ -131,5 +136,48 @@ public class LoginController {
     private void showRoleSelectionForRegistration(String username, String password) {
         RegistrationController registrationController = new RegistrationController(primaryStage, username, password);
         registrationController.showRoleSelectionForRegistration();
+    }
+
+    // Inner class for Account Setup
+    private class AccountSetupController {
+
+        private User user;
+
+        public AccountSetupController(User user) {
+            this.user = user;
+        }
+
+        public void showAccountSetupPage() {
+            GridPane grid = new GridPane();
+            grid.setVgap(8); grid.setHgap(10);
+            grid.setPadding(new Insets(10, 0, 0, 10));
+
+            TextField emailField = new TextField(), firstNameField = new TextField(),
+                    middleNameField = new TextField(), lastNameField = new TextField(),
+                    preferredFirstNameField = new TextField();
+            Label setupMessageLabel = new Label();
+            Button finishSetupButton = new Button("Finish Setup");
+
+            finishSetupButton.setOnAction(e -> {
+                if (emailField.getText().trim().isEmpty() || firstNameField.getText().trim().isEmpty()
+                        || lastNameField.getText().trim().isEmpty()) {
+                    setupMessageLabel.setText("Please fill in all required fields.");
+                } else {
+                    user.setDetails(emailField.getText(), firstNameField.getText(), middleNameField.getText(),
+                            lastNameField.getText(), preferredFirstNameField.getText());
+                    user.setAccountSetupComplete(true);
+                    proceedAfterLogin(user);
+                }
+            });
+
+            grid.addRow(0, new Label("Email:"), emailField);
+            grid.addRow(1, new Label("First Name:"), firstNameField);
+            grid.addRow(2, new Label("Middle Name:"), middleNameField);
+            grid.addRow(3, new Label("Last Name:"), lastNameField);
+            grid.addRow(4, new Label("Preferred First Name:"), preferredFirstNameField);
+            grid.addRow(5, finishSetupButton, setupMessageLabel);
+
+            primaryStage.setScene(new Scene(grid, 400, 400));
+        }
     }
 }

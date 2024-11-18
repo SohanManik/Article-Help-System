@@ -31,7 +31,7 @@ public class HomeController {
             adminTabs.getTabs().addAll(
             		new Tab("Add Article", AdminTabs.createAddArticleTab()),
             		new Tab("List Article", AdminTabs.createListArticlesTab()),
-            		new Tab("View Article", AdminTabs.createViewArticleTab()),
+            		new Tab("Manage Access", AdminTabs.createManageAccessRightsTab()),
             		new Tab("Delete Article", AdminTabs.createDeleteArticleTab()),
             		new Tab("Backup Article", AdminTabs.createBackupArticlesTab()),
             		new Tab("Restore Article", AdminTabs.createRestoreArticlesTab()),
@@ -50,7 +50,7 @@ public class HomeController {
             adminTabs.getTabs().addAll(
             		new Tab("Add Article", AdminTabs.createAddArticleTab()),
             		new Tab("List Article", AdminTabs.createListArticlesTab()),
-            		new Tab("View Article", AdminTabs.createViewArticleTab()),
+            		new Tab("Manage Group", AdminTabs.createViewArticleTabForInstructor()),
             		new Tab("Delete Article", AdminTabs.createDeleteArticleTab()),
             		new Tab("Backup Article", AdminTabs.createBackupArticlesTab()),
             		new Tab("Restore Article", AdminTabs.createRestoreArticlesTab())
@@ -60,12 +60,15 @@ public class HomeController {
         
         // Logout button for navigating back to the login page
         Button logoutButton = new Button("Logout");
+        
         logoutButton.setOnAction(e -> {
             // Redirect to the login page by initializing a new LoginController
             LoginController loginController = new LoginController(primaryStage);
             loginController.showLoginPage();
         });
+        
         vbox.getChildren().add(logoutButton);				// Adding the logout button to the layout
+        
         primaryStage.setScene(new Scene(vbox, 520, 560));	// Setting the scene with specified dimensions
     }
 }

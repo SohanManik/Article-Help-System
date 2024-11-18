@@ -6,7 +6,6 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.geometry.Insets;
 import model.DataStore;
-import model.Invitation;
 import model.User;
 
 public class LoginController {
@@ -86,7 +85,7 @@ public class LoginController {
     // Method to handle registration via an invitation code
     private void handleInvitationCode(String code) {
         DataStore dataStore = DataStore.getInstance();
-        Invitation invitation = dataStore.getInvitations().get(code);
+        User.Invitation invitation = dataStore.getInvitations().get(code);
         if (invitation != null) {
             RegistrationController registrationController = new RegistrationController(primaryStage, invitation.getRoles(), code);
             registrationController.showRegistrationPageWithRoles();
@@ -98,7 +97,7 @@ public class LoginController {
     // Method to handle password reset using a one-time password
     private void handlePasswordReset(User user, String oneTimePassword) {
         if (oneTimePassword.equals(user.getOneTimePassword()) && java.time.LocalDateTime.now().isBefore(user.getPasswordExpiry())) {
-            PasswordResetController passwordResetController = new PasswordResetController(primaryStage, user);
+            UserController passwordResetController = new UserController(primaryStage, user);
             passwordResetController.showPasswordResetPage();
         } else {
             messageLabel.setText("Invalid or expired one-time password.");
@@ -138,7 +137,7 @@ public class LoginController {
     // Proceeds to the home page after successful login, allowing role selection if multiple roles exist
     void proceedAfterLogin(User user) {
         if (user.getRoles().size() > 1) {
-            RoleSelectionController roleSelectionController = new RoleSelectionController(primaryStage, user);
+            UserController roleSelectionController = new UserController(primaryStage, user);
             roleSelectionController.showRoleSelectionPage();
         } else {
             HomeController homeController = new HomeController(primaryStage, user, user.getRoles().get(0));

@@ -72,4 +72,27 @@ public class User {
     public String getFullName() {
         return String.format("%s %s %s", firstName, middleName != null ? middleName : "", lastName).trim();
     }
+    
+    // Constructor to initialize user with roles from an invitation
+    public User(List<String> roles) {
+        this.roles = new ArrayList<>(roles);
+    }
+
+    // Convenience method to create a User from an Invitation
+    public static User fromInvitation(Invitation invitation) {
+        return new User(invitation.getRoles());
+    }
+
+    // Nested Invitation class for managing role-based invitations
+    public static class Invitation {
+        private List<String> roles;
+
+        public Invitation(List<String> roles) {
+            this.roles = roles;
+        }
+
+        public List<String> getRoles() {
+            return roles;
+        }
+    }
 }

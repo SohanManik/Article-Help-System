@@ -12,7 +12,7 @@ public class DataStore {
     
     // List to store User objects and Map to store Invitation codes and associated details
     private List<User> userList = new ArrayList<>();
-    private Map<String, Invitation> invitations = new HashMap<>();
+    private Map<String, User.Invitation> invitations = new HashMap<>();
 
     // Private constructor to prevent instantiation from outside the class
     private DataStore() {}
@@ -27,7 +27,7 @@ public class DataStore {
     public List<User> getUserList() { return userList; }
     
     // Getter for the invitations map
-    public Map<String, Invitation> getInvitations() { return invitations; }
+    public Map<String, User.Invitation> getInvitations() { return invitations; }
 
     // Method to find a user by username in the user list; returns null if user is not found
     public User findUserByUsername(String username) {

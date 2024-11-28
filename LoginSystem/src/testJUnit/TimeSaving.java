@@ -8,7 +8,7 @@ import model.DatabaseHelper;
 import java.sql.SQLException;
 import java.util.List;
 
-public class DatabaseHelperTest {
+public class TimeSaving {
 
  private DatabaseHelper databaseHelper;
 

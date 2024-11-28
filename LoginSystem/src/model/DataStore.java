@@ -1,36 +1,65 @@
 package model;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class DataStore {
-	
-    // Singleton instance to ensure a single instance of DataStore throughout the application
+
     private static DataStore instance = null;
     
-    // List to store User objects and Map to store Invitation codes and associated details
+    // User-related attributes
     private List<User> userList = new ArrayList<>();
     private Map<String, User.Invitation> invitations = new HashMap<>();
+    
+    // Help system-related attributes
+    private static List<String> genericMessages = new ArrayList<>();
+    private static Map<String, List<String>> specificMessages = new HashMap<>();
 
-    // Private constructor to prevent instantiation from outside the class
+    // Private constructor for singleton pattern
     private DataStore() {}
 
-    // Static method to get the singleton instance of DataStore
+    // Singleton getInstance method
     public static DataStore getInstance() {
-        if (instance == null) { instance = new DataStore(); }
+        if (instance == null) instance = new DataStore();
         return instance;
     }
 
-    // Getter for the user list
-    public List<User> getUserList() { return userList; }
-    
-    // Getter for the invitations map
-    public Map<String, User.Invitation> getInvitations() { return invitations; }
-
-    // Method to find a user by username in the user list; returns null if user is not found
-    public User findUserByUsername(String username) {
-        return userList.stream().filter(u -> u.getUsername().equals(username)).findFirst().orElse(null);
+    // User-related methods
+    public List<User> getUserList() {
+        return userList;
     }
+
+    public Map<String, User.Invitation> getInvitations() {
+        return invitations;
+    }
+
+    public User findUserByUsername(String username) {
+        return userList.stream()
+                .filter(u -> u.getUsername().equals(username))
+                .findFirst()
+                .orElse(null);
+    }
+
+    // Help system methods
+    public static void sendGenericMessage(String message) {
+        genericMessages.add(message);
+    }
+
+    public static void sendSpecificMessage(String query, String message) {
+        specificMessages.computeIfAbsent(query, k -> new ArrayList<>()).add(message);
+    }
+
+    public List<String> getGenericMessages() {
+        return new ArrayList<>(genericMessages);
+    }
+
+    public List<String> getSpecificMessages(String query) {
+        return specificMessages.getOrDefault(query, new ArrayList<>());
+    }
+
+    public void clearHelpMessages() {
+        genericMessages.clear();
+        specificMessages.clear();
+    }
+
+    // Additional utility methods can be added here as needed
 }

@@ -1,2 +1,2 @@
-# CSE-360-Project
-CSE 360 Group Project
+# Article-Help-System
+Help System UI that is able to store and encrypt articles. Allows Admin, Professor, and Student logins that tailor the user experience based on permissions. 
